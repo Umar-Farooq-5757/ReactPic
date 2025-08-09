@@ -3,3 +3,10 @@
 header{
     box-shadow: 3px 3px 1px 4px #52a3af;
 }
+.imageBox, aside{
+
+  background-color: #f0eeee; /* White background */
+  border-radius: 8px; /* Optional: rounds the corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
