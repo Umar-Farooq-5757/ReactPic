@@ -1,43 +1,66 @@
-import React from "react";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { PhotoIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { saveAs } from "file-saver";
 
-const ImageContainer = () => {
+const ImageContainer = ({ filters }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const canvasRef = useRef(null);
+  const [imageObject, setImageObject] = useState(null); // State to hold the original image object
 
+  // This function is called when a user selects a new image file
   const handleImageUpload = (event) => {
-    // Get the selected file from the input
     const file = event.target.files[0];
     if (file) {
-      // Create a temporary URL for the file to display it
+      // Create a temporary URL for the file
       const newImageUrl = URL.createObjectURL(file);
       setImageUrl(newImageUrl);
+
+      // Create a new Image object and set its source
+      const image = new Image();
+      image.src = newImageUrl;
+      image.onload = () => {
+        setImageObject(image); // Store the loaded image object in state
+      };
+      image.onerror = () => {
+        console.error("Failed to load image.");
+      };
     }
   };
 
+  // This effect updates the canvas whenever the image or filters change
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !imageUrl) {
+    if (!canvas || !imageObject) {
       return;
     }
 
     const ctx = canvas.getContext("2d");
-    const image = new Image();
-    image.src = imageUrl;
 
-    image.onload = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      ctx.drawImage(image, 0, 0);
-    };
+    // Set canvas dimensions to match the original image
+    canvas.width = imageObject.naturalWidth;
+    canvas.height = imageObject.naturalHeight;
 
-    image.onerror = () => {
-      console.error("Failed to load image.");
-    };
-  }, [imageUrl]); // This effect re-runs whenever imageUrl changes.
+    // Apply the filters to the canvas context before drawing
+    // This bakes the filter into the pixel data
+    const {
+      blur,
+      grayScale,
+      brightness,
+      contrast,
+      hueRotate,
+      invert,
+      opacity,
+      saturate,
+      sepia,
+    } = filters;
+    ctx.filter = `blur(${blur}px) grayscale(${grayScale}%) brightness(${brightness}%) contrast(${contrast}%) hue-rotate(${hueRotate}deg) invert(${invert}%) opacity(${opacity}%) saturate(${saturate}%) sepia(${sepia}%)`;
 
+    // Clear the canvas and redraw the image with the new filter
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(imageObject, 0, 0);
+  }, [imageObject, filters]); // Re-run this effect when the image or filters change
+
+  // This function now correctly downloads the filtered image from the canvas
   const handleDownload = () => {
     const canvas = canvasRef.current;
     if (!canvas || !imageUrl) {
@@ -45,52 +68,39 @@ const ImageContainer = () => {
       return;
     }
 
-    // Get the data URL of the canvas content
-    // 'image/png' is the default and a good choice for most edits
-    const image = canvas.toDataURL("image/png");
-
-    // Create a temporary link element
-    const link = document.createElement("a");
-    link.href = image;
-
-    // Set the filename for the download
-    link.download = "edited-image.png";
-
-    // Append the link to the document body, click it, and then remove it
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Get the data URL of the canvas content.
+    // The image data now includes the filters applied in the useEffect hook.
+    canvas.toBlob((blob) => {
+      if (blob) {
+        saveAs(blob, "edited-image.png");
+      }
+    }, "image/png");
   };
 
   return (
     <div className="text-black flex flex-col items-center justify-center min-w-[68%] p-4 font-sans antialiased">
-      <div className="imageBox rounded-2xl p-6 md:p-8 w-full  text-center">
-        <h1 className="text-2xl font-semibold text-left text-gray-800 mb-3">
+      <div className="imageBox rounded-2xl p-6 md:p-5 w-full text-center">
+        <h1 className="text-2xl font-semibold text-left text-[#1f5172] mb-3">
           Upload Image
         </h1>
-
-        {/* Canvas container. The canvas dimensions are set dynamically in the useEffect. */}
-        <div className="border-4 max-w-[755px]  min-h-96 max-h-[580px] border-dashed border-gray-300 rounded-xl overflow-hidden p-4 flex items-center justify-center">
+        <div className="border-4 max-w-[800px] min-h-96 max-h-[580px] border-dashed border-gray-300 rounded-xl overflow-hidden p-4 flex items-center justify-center">
           {imageUrl ? (
             // The canvas element itself
             <canvas
               ref={canvasRef}
-              className="max-w-full max-h-[580px] rounded-lg shadow-lg"
+              className={`max-w-full max-h-[580px] rounded-lg shadow-lg`}
             ></canvas>
           ) : (
             <p className="text-gray-400 text-lg">Your image will appear here</p>
           )}
         </div>
-
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 my-2 mt-8">
-          {/* File input for the user to upload an image */}
           <label
             htmlFor="file-upload"
-            className=" text-sm bg-[#1e546f] text-white flex cursor-pointer justify-center gap-2 items-center font-semibold py-2 px-4 rounded-md hover:bg-[#29698a] transition-colors duration-200 shadow-md "
+            className="text-sm bg-[#1e546f] text-white flex cursor-pointer justify-center gap-2 items-center font-semibold py-2 px-4 rounded-md hover:bg-[#29698a] transition-colors duration-200 shadow-md"
           >
-              {" "}
-              <PhotoIcon className="size-5" />
-              Choose an image
+            <PhotoIcon className="size-5" />
+            Choose an image
           </label>
           <input
             id="file-upload"
@@ -99,8 +109,6 @@ const ImageContainer = () => {
             onChange={handleImageUpload}
             className="hidden"
           />
-
-          {/* Download button, only visible if an image is loaded */}
           {imageUrl && (
             <button
               onClick={handleDownload}
