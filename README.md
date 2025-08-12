@@ -1,3 +1,5 @@
+> **IMPORTANT:** I have done vibe coding in a major part of this webapp. You know that AI cannot create fully working apps/websites, but you should know how to use AI to combine small code snippets into a large webapp. That's why I have used AI to speed up the development. Keep learning and keep supporting.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
