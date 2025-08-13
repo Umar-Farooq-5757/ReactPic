@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-const Slider = ({ title, filters, setFilters, value, name, min, max }) => {
+const Slider = ({ title, filters, setFilters, value, name, min, max, isDark }) => {
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: parseFloat(e.target.value) });
   };
@@ -9,7 +9,7 @@ const Slider = ({ title, filters, setFilters, value, name, min, max }) => {
      <div className="flex flex-col mb-5">
       <h3 className="font-bold text-sm self-center">{title}</h3>
       <div className="flex justify-center items-center gap-2">
-        <span className="border-dashed border-black border px-1 py-0">{min}</span>
+        <span className={`border-dashed ${isDark?'border-white':'border-black'} text-xs border px-1 py-0`}>{min}</span>
         <input
           type="range"
           min={min}
@@ -19,7 +19,7 @@ const Slider = ({ title, filters, setFilters, value, name, min, max }) => {
           onChange={handleChange}
           className="range range-xs range-accent "
         />
-        <span className="border-dashed border-black border px-1 py-0">{max}</span>
+        <span className={`border-dashed ${isDark?'border-white':'border-black'} text-xs border px-1 py-0`}>{max}</span>
       </div>
     </div>
   );

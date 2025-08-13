@@ -8,7 +8,7 @@ import "react-image-crop/dist/ReactCrop.css";
 // Fixes canvas positioning/sizing issues so drawing is always visible while drawing
 // Keeps: filters, cropping, download, drawing (brush/eraser/undo/clear), and high-res export
 
-export default function ImageContainer({ filters }) {
+export default function ImageContainer({ filters, isDark }) {
   const [imageUrl, setImageUrl] = useState(null);
   const imgRef = useRef(null);
   const drawCanvasRef = useRef(null); // visible drawing layer
@@ -353,8 +353,8 @@ export default function ImageContainer({ filters }) {
 
   return (
     <div className="text-black flex flex-col items-center justify-center w-full lg:w-2/3 p-4 font-sans antialiased">
-      <div className="imageBox bg-white rounded-2xl p-6 md:p-5 w-full text-center shadow-lg">
-        <h1 className="text-2xl font-semibold text-left text-[#1f5172] mb-3">Upload Image</h1>
+      <div className={`imageBox ${isDark?'bg-slate-700':'bg-[#f0eeee]'} rounded-2xl p-6 md:p-5 w-full text-center shadow-lg`}>
+        <h1 className={`text-2xl font-semibold text-left ${isDark?'text-[#6ac3ff]':'text-[#1f5172]'} mb-3`}>Upload Image</h1>
 
         <div
           ref={wrapperRef}
@@ -426,7 +426,7 @@ export default function ImageContainer({ filters }) {
           </label>
 
           <label className="flex items-center gap-2">
-            <span className="text-sm">Size</span>
+            <span className={`${isDark?"text-white":'text-black'} text-sm`}>Size</span>
             <input type="range" min={1} max={80} value={brushSize} onChange={(e) => setBrushSize(Number(e.target.value))} />
           </label>
 

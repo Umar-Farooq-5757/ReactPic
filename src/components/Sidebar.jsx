@@ -1,7 +1,7 @@
 import Slider from "./Slider.jsx";
 import '../App.css'
 
-const Sidebar = ({ filters, setFilters }) => {
+const Sidebar = ({ filters, setFilters, isDark }) => {
   const handleReset = () => {
     setFilters({
       blur: 0,
@@ -17,8 +17,8 @@ const Sidebar = ({ filters, setFilters }) => {
   };
 
   return (
-    <aside className="w-full overflow-y-auto lg:w-1/3 h-[90vh] py-7 px-5 bg-white text-black mt-4 lg:mt-0 rounded-lg shadow-lg">
-      <h2 className="font-semibold text-2xl mb-3 text-[#1f5172]">Tools</h2>
+    <aside className={`w-full overflow-y-auto lg:w-1/3 h-[90vh] py-7 px-5  ${isDark?'bg-slate-700 text-white':'bg-white text-black'} mt-4 lg:mt-0 rounded-lg shadow-lg`}>
+      <h2 className={`font-semibold text-2xl mb-3  ${isDark?'text-[#6ac3ff]':'text-[#1f5172]'}`}>Tools</h2>
       <div className="space-y-4">
         <Slider
           title={"Gray Scale"}
@@ -28,6 +28,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"grayScale"}
           min={0}
           max={100}
+          isDark={isDark}
         />
         <Slider
           title={"Brightness"}
@@ -37,6 +38,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"brightness"}
           min={0}
           max={200}
+          isDark={isDark}
         />
         <Slider
           title={"Contrast"}
@@ -46,6 +48,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"contrast"}
           min={0}
           max={200}
+          isDark={isDark}
         />
         <Slider
           title={"Hue Rotate"}
@@ -55,6 +58,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"hueRotate"}
           min={0}
           max={360}
+          isDark={isDark}
         />
         <Slider
           title={"Invert"}
@@ -64,6 +68,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"invert"}
           min={0}
           max={100}
+          isDark={isDark}
         />
         <Slider
           title={"Opacity"}
@@ -73,6 +78,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"opacity"}
           min={0}
           max={100}
+          isDark={isDark}
         />
         <Slider
           title={"Saturate"}
@@ -82,6 +88,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"saturate"}
           min={0}
           max={200}
+          isDark={isDark}
         />
         <Slider
           title={"Sepia"}
@@ -91,6 +98,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"sepia"}
           min={0}
           max={100}
+          isDark={isDark}
         />
         <Slider
           title={"Blur"}
@@ -100,6 +108,7 @@ const Sidebar = ({ filters, setFilters }) => {
           name={"blur"}
           min={0}
           max={10}
+          isDark={isDark}
         />
       
       </div>
