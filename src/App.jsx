@@ -3,6 +3,7 @@ import "./App.css";
 import Header from "./components/Header";
 import ImageContainer from "./components/ImageContainer";
 import Sidebar from "./components/Sidebar";
+import Footer from "./components/Footer";
 
 function App() {
   const [isDark, setIsDark] = useState(
@@ -34,6 +35,7 @@ function App() {
         <ImageContainer isDark={isDark} filters={filters} />
         <Sidebar isDark={isDark} filters={filters} setFilters={setFilters} />
       </main>
+      <Footer isDark={isDark}/>
     </div>
   );
 }
