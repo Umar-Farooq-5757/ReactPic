@@ -2,7 +2,7 @@
 
 # 🚀 ReactPic
 
-Edit your images. Multiple filters available with drawing on image functionality as well
+Edit your images. Multiple filters available with drawing on image functionality as well.
 
 ## ✨ Live Site Preview
 
